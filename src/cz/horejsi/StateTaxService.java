@@ -29,7 +29,7 @@ public class StateTaxService {
                 rowCounter++;
                 String[] parts = scanner.nextLine().split(delimiter);
 
-                if(parts.length != 5) throw new StateTaxException("Wrong number of items on the row.");
+                if(parts.length != 5) throw new StateTaxException("ERROR: reading data from file: '" + filename + "' on the row: " + rowCounter  + " \n\twrong number of items");
 
                 try {
                     var stateShortcut = parts[0];
@@ -40,17 +40,19 @@ public class StateTaxService {
 
                     stateTaxList.add(new StateTax(stateShortcut, stateName, baseTax, reducedTax, isSpecialTax));
 
-                } catch (ParseException e) {
-                    throw new StateTaxException("error reading data from file: '" + filename + "' on row: " + rowCounter + " \n\t" + e.getMessage());
+                } catch (ParseException | StateTaxException e) {
+                    throw new StateTaxException("ERROR: reading data from file: '" + filename + "' on row: " + rowCounter + " \n\t" + e.getMessage());
                 }
             }
         } catch (FileNotFoundException e) {
-            throw new StateTaxException("File not found: " + e.getMessage());
+            throw new StateTaxException("ERROR: file: '" + filename + "'  not found.\n\t" + e.getMessage());
         }
     }
 
     public void printBasicInfo() {
         stateTaxList.forEach(s -> System.out.println(s.getBasicInfo()));
+
+        //stateTaxList.forEach(System.out::println);
     }
 }
 

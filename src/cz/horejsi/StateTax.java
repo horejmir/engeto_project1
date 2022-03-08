@@ -58,7 +58,7 @@ public class StateTax {
     public void setBaseTax(Double baseTax) throws StateTaxException {
 
         if(baseTax < 0.0)
-            throw new StateTaxException("error - base tax must be greater or equal to 0");
+            throw new StateTaxException("base tax must be greater or equal to 0");
         else
             this.baseTax = baseTax;
     }
@@ -70,7 +70,7 @@ public class StateTax {
     public void setReducedTax(Double reducedTax) throws StateTaxException {
 
         if(reducedTax < 0.0)
-            throw new StateTaxException("error - reduced tax must be greater or equal to 0");
+            throw new StateTaxException("reduced tax must be greater or equal to 0");
         else
             this.reducedTax = reducedTax;
     }
