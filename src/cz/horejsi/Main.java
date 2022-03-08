@@ -15,7 +15,7 @@ public class Main {
             System.err.println(e.getMessage());
         }
 
-        stateTaxService.printBasicInfo();
+        stateTaxService.printBasicInfo(20, false);
 
     }
 }

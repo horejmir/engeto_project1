@@ -10,18 +10,18 @@ public class StateTax {
     private String stateName;
     private Double baseTax;
     private Double reducedTax;
-    private boolean isSpecialTax;
+    private boolean hasSpecialTax;
 
-    public StateTax(String stateShortcut, String stateName, Double fullTax, Double reduceTax, boolean isSpecialTax) throws StateTaxException {
+    public StateTax(String stateShortcut, String stateName, Double fullTax, Double reducedTax, boolean hasSpecialTax) throws StateTaxException {
         this.stateShortcut = stateShortcut;
         this.stateName = stateName;
         setBaseTax(fullTax);
-        setReducedTax(reduceTax);
-        this.isSpecialTax = isSpecialTax;
+        setReducedTax(reducedTax);
+        this.hasSpecialTax = hasSpecialTax;
     }
 
     public String getBasicInfo(){
-        return stateName + " (" + stateShortcut + "): " + outputFormat.format(baseTax) + " %";
+        return stateName + " (" + stateShortcut + "):\t" + outputFormat.format(baseTax) + " %\t(" + outputFormat.format(reducedTax) + " %)";
     }
 
     @Override
@@ -31,7 +31,7 @@ public class StateTax {
                 ", stateName='" + stateName + '\'' +
                 ", baseTax=" + baseTax +
                 ", reducedTax=" + reducedTax +
-                ", isSpecialTax=" + isSpecialTax +
+                ", hasSpecialTax=" + hasSpecialTax +
                 '}';
     }
 
@@ -75,11 +75,11 @@ public class StateTax {
             this.reducedTax = reducedTax;
     }
 
-    public boolean isSpecialTax() {
-        return isSpecialTax;
+    public boolean hasSpecialTax() {
+        return hasSpecialTax;
     }
 
-    public void setSpecialTax(boolean specialTax) {
-        this.isSpecialTax = specialTax;
+    public void setSpecialTax(boolean hasSpecialTax) {
+        this.hasSpecialTax = hasSpecialTax;
     }
 }
