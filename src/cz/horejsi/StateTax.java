@@ -2,9 +2,7 @@ package cz.horejsi;
 
 import java.text.DecimalFormat;
 
-public class StateTax {
-
-    private final DecimalFormat outputFormat = new DecimalFormat("0.#");
+public class StateTax implements Comparable<StateTax> {
 
     private String stateShortcut;
     private String stateName;
@@ -20,8 +18,17 @@ public class StateTax {
         this.hasSpecialTax = hasSpecialTax;
     }
 
-    public String getBasicInfo(){
-        return stateName + " (" + stateShortcut + "):\t" + outputFormat.format(baseTax) + " %\t(" + outputFormat.format(reducedTax) + " %)";
+    public String getFullOutput(DecimalFormat taxFormat){
+        return stateName + " (" + stateShortcut + "):\t" + taxFormat.format(baseTax) + "\t(" + taxFormat.format(reducedTax) + ")";
+    }
+
+    public String getShortOutput(){
+        return "(" + stateShortcut + ")";
+    }
+
+    @Override
+    public int compareTo(StateTax o) {
+        return this.stateShortcut.compareTo(o.getStateShortcut());
     }
 
     @Override
@@ -56,7 +63,6 @@ public class StateTax {
     }
 
     public void setBaseTax(Double baseTax) throws StateTaxException {
-
         if(baseTax < 0.0)
             throw new StateTaxException("base tax must be greater or equal to 0");
         else
@@ -68,7 +74,6 @@ public class StateTax {
     }
 
     public void setReducedTax(Double reducedTax) throws StateTaxException {
-
         if(reducedTax < 0.0)
             throw new StateTaxException("reduced tax must be greater or equal to 0");
         else
