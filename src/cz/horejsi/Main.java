@@ -25,12 +25,15 @@ public class Main {
 
         StateTaxService stateTaxService = new StateTaxService();
 
+        //import data from file
         try {
-            stateTaxService.importFromFile(INPUT_FILENAME, DELIMITER);
+            NumberFormat inputNumberFormat = NumberFormat.getInstance(new Locale(INPUT_FILE_LOCALE_LANGUAGE, INPUT_FILE_LOCALE_COUNTRY));
+            stateTaxService.importFromFile(INPUT_FILENAME, DELIMITER, inputNumberFormat);
         } catch (StateTaxException e) {
             System.err.println(e.getMessage());
         }
 
+        //get filter limit from user
         double lowerLimit = 20.0;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             System.out.print("Insert lower limit of base VAT tax: ");
@@ -40,11 +43,12 @@ public class Main {
             System.err.println("Input is not valid (will be used "+ lowerLimit + " limit): " + e.getMessage());
         }
 
-        String output = stateTaxService.filterAndFormatOutput(lowerLimit,false);
+        //get and print output
+        String output = stateTaxService.filterAndFormatOutput(lowerLimit,false, new DecimalFormat(OUTPUT_TAX_PATTERN));
         System.out.println(output);
 
+        //export to file
         String outputFilename = OUTPUT_FILE_PREFIX + (int)lowerLimit + OUTPUT_FILE_EXTENSION;
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilename))) {
             writer.write(output);
             System.out.println("\n# OUTPUT SAVED TO FILE: '" + outputFilename + "'");
@@ -52,12 +56,6 @@ public class Main {
             System.err.println(e.getMessage());
         }
     }
-
-    public static DecimalFormat getOutputTaxFormat() {
-        return new DecimalFormat(OUTPUT_TAX_PATTERN);
-    }
-
-    public static NumberFormat getInputNumberFormat() { return NumberFormat.getInstance(new Locale(INPUT_FILE_LOCALE_LANGUAGE, INPUT_FILE_LOCALE_COUNTRY));}
 }
 
 

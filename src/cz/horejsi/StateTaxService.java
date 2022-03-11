@@ -13,11 +13,10 @@ public class StateTaxService {
 
     private final List<StateTax> stateTaxList = new ArrayList<>();
 
-    public void importFromFile(String filename, String delimiter) throws StateTaxException {
+    public void importFromFile(String filename, String delimiter, NumberFormat inputNumberFormat) throws StateTaxException {
 
         try (Scanner scanner = new Scanner(new BufferedReader(new FileReader(filename)))) {
 
-            NumberFormat inputNumberFormat = Main.getInputNumberFormat();
             int rowCounter = 0;
             while (scanner.hasNextLine()) {
 
@@ -28,11 +27,11 @@ public class StateTaxService {
                     throw new StateTaxException("ERROR: reading data from file: '" + filename + "' on the row: " + rowCounter + " \n\twrong number of items");
 
                 try {
-                    var stateShortcut = parts[0];
-                    var stateName = parts[1];
-                    var baseTax = inputNumberFormat.parse(parts[2]).doubleValue();
-                    var reducedTax = inputNumberFormat.parse(parts[3]).doubleValue();
-                    var isSpecialTax = Boolean.parseBoolean(parts[4]);
+                    String stateShortcut = parts[0];
+                    String stateName = parts[1];
+                    double baseTax = inputNumberFormat.parse(parts[2]).doubleValue();
+                    double reducedTax = inputNumberFormat.parse(parts[3]).doubleValue();
+                    boolean isSpecialTax = Boolean.parseBoolean(parts[4]);
 
                     stateTaxList.add(new StateTax(stateShortcut, stateName, baseTax, reducedTax, isSpecialTax));
 
@@ -40,12 +39,10 @@ public class StateTaxService {
                     throw new StateTaxException("ERROR: reading data from file: '" + filename + "' on row: " + rowCounter + " \n\t" + e.getMessage());
                 }
             }
-        } catch (FileNotFoundException e) {
-            throw new StateTaxException("ERROR: file: '" + filename + "'  not found.\n\t" + e.getMessage());
-        }
+        } catch (FileNotFoundException e) { throw new StateTaxException("ERROR: file: '" + filename + "'  not found.\n\t" + e.getMessage()); }
     }
 
-    public String filterAndFormatOutput(double lowerLimit, boolean hasSpecialTax) {
+    public String filterAndFormatOutput(double lowerLimit, boolean hasSpecialTax, DecimalFormat taxFormat ) {
 
         List<StateTax> validItems = new ArrayList<>();
         List<StateTax> notValidItems = new ArrayList<>();
@@ -62,7 +59,6 @@ public class StateTaxService {
         Collections.sort(notValidItems);
 
         //output
-        DecimalFormat taxFormat = Main.getOutputTaxFormat();
         String withSpecialTax = "with another special VAT tax(es)";
         String withoutSpecialTax =  "without another special VAT tax(es)";
 
