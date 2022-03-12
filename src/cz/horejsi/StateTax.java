@@ -64,7 +64,7 @@ public class StateTax implements Comparable<StateTax> {
 
     public void setBaseTax(Double baseTax) throws StateTaxException {
         if(baseTax < 0.0)
-            throw new StateTaxException("base tax must be greater or equal to 0");
+            throw new StateTaxException("základní sazba VAT musí být rovna nebo větší 0");
         else
             this.baseTax = baseTax;
     }
@@ -75,7 +75,7 @@ public class StateTax implements Comparable<StateTax> {
 
     public void setReducedTax(Double reducedTax) throws StateTaxException {
         if(reducedTax < 0.0)
-            throw new StateTaxException("reduced tax must be greater or equal to 0");
+            throw new StateTaxException("snížená sazba VAT musí být rovna nebo větší 0");
         else
             this.reducedTax = reducedTax;
     }

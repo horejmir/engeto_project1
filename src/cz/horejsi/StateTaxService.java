@@ -24,7 +24,7 @@ public class StateTaxService {
                 String[] parts = scanner.nextLine().split(delimiter);
 
                 if (parts.length != 5)
-                    throw new StateTaxException("ERROR: reading data from file: '" + filename + "' on the row: " + rowCounter + " \n\twrong number of items");
+                    throw new StateTaxException("CHYBA: načítání dat ze souboru: '" + filename + "' na řádku: " + rowCounter + " \n\tneplatný počet položek.");
 
                 try {
                     String stateShortcut = parts[0];
@@ -36,10 +36,10 @@ public class StateTaxService {
                     stateTaxList.add(new StateTax(stateShortcut, stateName, baseTax, reducedTax, isSpecialTax));
 
                 } catch (ParseException | StateTaxException e) {
-                    throw new StateTaxException("ERROR: reading data from file: '" + filename + "' on row: " + rowCounter + " \n\t" + e.getMessage());
+                    throw new StateTaxException("CHYBA: načítání dat ze souboru: '" + filename + "' na řádku: " + rowCounter + " \n\t" + e.getMessage());
                 }
             }
-        } catch (FileNotFoundException e) { throw new StateTaxException("ERROR: file: '" + filename + "'  not found.\n\t" + e.getMessage()); }
+        } catch (FileNotFoundException e) { throw new StateTaxException("CHYBA: soubor: '" + filename + "' nenalezen.\n\t" + e.getMessage()); }
     }
 
     public String filterAndFormatOutput(double lowerLimit, boolean hasSpecialTax, DecimalFormat taxFormat ) {
@@ -59,12 +59,8 @@ public class StateTaxService {
         Collections.sort(notValidItems);
 
         //output
-        String withSpecialTax = "with another special VAT tax(es)";
-        String withoutSpecialTax =  "without another special VAT tax(es)";
-
-        return "States with base VAT tax higher then " + taxFormat.format(lowerLimit) +  " and " + (hasSpecialTax ? withSpecialTax : withoutSpecialTax) + ".\n"
-                + validItems.stream().map(s -> s.getFullOutput(taxFormat)).collect(Collectors.joining("\n"))
-                +"\nBase VAT tax " + taxFormat.format(lowerLimit) +  " or lower, or "  + (!hasSpecialTax ? withSpecialTax : withoutSpecialTax) + ": "
+        return  validItems.stream().map(s -> s.getFullOutput(taxFormat)).collect(Collectors.joining("\n"))
+                +"\nSazba VAT " + taxFormat.format(lowerLimit) +  " nebo nižší nebo "  + (!hasSpecialTax ? "používají" : "nepoužívají") + " speciální sazbu: "
                 + notValidItems.stream().map(StateTax::getShortOutput).collect(Collectors.joining(" "));
     }
 }
